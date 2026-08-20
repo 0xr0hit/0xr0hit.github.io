@@ -555,6 +555,54 @@ html.is-loading{overflow:hidden;height:100%;}
 </style>
 </head>
 <body>
+
+<!-- ===== Background Music Player ===== -->
+<audio id="bg-music" src="r0hitsong.mp3" loop autoplay muted></audio>
+<button id="music-toggle" aria-label="Toggle music" style="
+  position:fixed; bottom:20px; right:20px; z-index:9999;
+  background:rgba(0,0,0,0.75); color:#fff; border:1px solid rgba(255,255,255,0.3);
+  padding:10px 16px; border-radius:30px; cursor:pointer;
+  font-family:inherit; font-size:13px; letter-spacing:0.05em;
+  backdrop-filter:blur(6px);
+">🔇 MUSIC</button>
+<script>
+(function(){
+  const audio = document.getElementById('bg-music');
+  const toggleBtn = document.getElementById('music-toggle');
+  let userHasInteracted = false;
+
+  window.addEventListener('load', () => {
+    audio.play().catch(err => console.log('Autoplay blocked, waiting for interaction:', err));
+  });
+
+  function unmuteOnInteraction() {
+    if (!userHasInteracted) {
+      audio.muted = false;
+      audio.volume = 0.5;
+      audio.play();
+      userHasInteracted = true;
+      toggleBtn.textContent = '🔊 MUSIC';
+    }
+  }
+  document.addEventListener('click', unmuteOnInteraction, { once: true });
+  document.addEventListener('scroll', unmuteOnInteraction, { once: true });
+  document.addEventListener('touchstart', unmuteOnInteraction, { once: true });
+
+  toggleBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (audio.muted || audio.paused) {
+      audio.muted = false;
+      audio.play();
+      userHasInteracted = true;
+      this.textContent = '🔊 MUSIC';
+    } else {
+      audio.muted = true;
+      this.textContent = '🔇 MUSIC';
+    }
+  });
+})();
+</script>
+<!-- ===== End Background Music Player ===== -->
 <div id="preloader" role="status" aria-live="polite" aria-label="Loading">
   <div class="pl-inner">
     <div class="pl-ring-wrap">
